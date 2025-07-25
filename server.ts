@@ -1,76 +1,41 @@
+import type { Request, Response } from 'express'
+import express from 'express'
+import { createServer as createViteServer, ViteDevServer } from 'vite'
 import fs from 'node:fs/promises'
-import express, { type Request, type Response } from 'express'
-import type { ViteDevServer } from 'vite'
 
-// Constants
-const isProduction = process.env.NODE_ENV === 'production'
-const port = Number(process.env.PORT) || 5179
+const isProd = process.env.NODE_ENV === 'production'
 const base = process.env.BASE || '/'
-
-// Cached production HTML template
-const templateHtml: string = isProduction
-  ? await fs.readFile('./dist/client/index.html', 'utf-8')
-  : ''
-
-// Create Express app
 const app = express()
 
-let vite: ViteDevServer | undefined
-if (!isProduction) {
-  const { createServer } = await import('vite')
-  vite = await createServer({
-    server: { middlewareMode: true },
-    appType: 'custom',
-    base,
-  })
-  app.use(vite.middlewares)
-} else {
-  const compression = (await import('compression')).default
-  const sirv = (await import('sirv')).default
-  app.use(compression())
-  app.use(base, sirv('./dist/client', { extensions: [] }))
-}
+export default async function handler(req: Request, res: Response) {
+  let vite: ViteDevServer | undefined
+  let templateHtml = ''
 
-// Type for server-side rendered result
-interface RenderResult {
-  html: string
-  head?: string
-}
-
-// Serve HTML for all routes
-app.use('*all', async (req: Request, res: Response) => {
-  try {
-    const url = req.originalUrl.replace(base, '')
-
-    let template: string
-    let render: (url: string) => Promise<RenderResult>
-
-    if (!isProduction) {
-      // Always read fresh template in dev
-      template = await fs.readFile('./index.html', 'utf-8')
-      template = await vite!.transformIndexHtml(url, template)
-      render = (await vite!.ssrLoadModule('/src/entry-server.ts')).render as (url: string) => Promise<RenderResult>
-    } else {
-      template = templateHtml
-      // @ts-ignore
-      render = (await import('./dist/server/entry-server.js')).render as (url: string) => Promise<RenderResult>
-    }
-
-    const rendered = await render(url)
-
-    const html = template
-      .replace(`<!--app-head-->`, rendered.head ?? '')
-      .replace(`<!--app-html-->`, rendered.html)
-
-    res.status(200).set({ 'Content-Type': 'text/html' }).send(html)
-  } catch (e: any) {
-    if (!isProduction && vite) vite.ssrFixStacktrace(e)
-    console.error(e.stack)
-    res.status(500).end(e.stack)
+  if (!isProd) {
+    vite = await createViteServer({
+      server: { middlewareMode: true },
+      appType: 'custom',
+      base,
+    })
+    app.use(vite.middlewares)
+    templateHtml = await fs.readFile('./index.html', 'utf-8')
+  } else {
+    templateHtml = await fs.readFile('./dist/client/index.html', 'utf-8')
+    app.use(base, express.static('./dist/client'))
   }
-})
 
-// Start the server
-app.listen(port, () => {
-  console.log(`Server started at http://localhost:${port}`)
-})
+  const url = req.originalUrl.replace(base, '')
+  const template = isProd ? templateHtml : await vite!.transformIndexHtml(url, templateHtml)
+  const render = isProd
+    // @ts-ignore
+    ? (await import('./dist/server/entry-server.js')).render
+    : (await vite!.ssrLoadModule('/src/entry-server.ts')).render
+
+  const { html, head } = await render(url)
+
+  const finalHtml = template
+    .replace('<!--app-head-->', head ?? '')
+    .replace('<!--app-html-->', html)
+
+  res.status(200).setHeader('Content-Type', 'text/html').end(finalHtml)
+}
