@@ -11,6 +11,5 @@
             "use": "@vercel/static-build"
         }
     ],
-    "routes": [],
-    "outputDirectory": "dist/client"
+    "outputDirectory": "dist"
 }

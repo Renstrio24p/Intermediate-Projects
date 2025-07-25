@@ -42,6 +42,7 @@ const app = express()
           const entry = await vite.ssrLoadModule('/src/entry-server.ts')
           render = entry.render
         } else {
+          // @ts-ignore
           const entry = await import('./dist/server/entry-server.js')
           render = entry.render as unknown as typeof render
           template = templateHtml
