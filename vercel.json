@@ -5,24 +5,12 @@
             "destination": "/index.html"
         }
     ],
-    "buildCommand": "pnpm build",
-    "installCommand": "pnpm install",
     "builds": [
         {
             "src": "package.json",
-            "use": "@vercel/static-build",
-            "config": {
-                "distDir": "dist"
-            }
+            "use": "@vercel/static-build"
         }
     ],
-    "routes": [
-        {
-            "handle": "filesystem"
-        },
-        {
-            "src": "/.*",
-            "dest": "/index.html"
-        }
-    ]
+    "buildCommand": "pnpm install && pnpm run build",
+    "outputDirectory": "dist"
 }
