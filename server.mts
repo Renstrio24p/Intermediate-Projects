@@ -64,6 +64,12 @@ const app = express()
       }
     })
 
+    app.use('*', async (req, res) => {
+      const html = await fs.readFile('./dist/client/index.html', 'utf-8');
+      res.status(200).set({ 'Content-Type': 'text/html' }).end(html);
+    });
+
+
     app.listen(port, () => {
       console.log(`➜  Server running at http://localhost:${port}`)
     })
