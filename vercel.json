@@ -2,7 +2,7 @@
     "rewrites": [
         {
             "source": "/(.*)",
-            "destination": "/entry-server.js"
+            "destination": "/index.html"
         }
     ]
 }
