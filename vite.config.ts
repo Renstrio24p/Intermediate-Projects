@@ -3,6 +3,6 @@ import checker from 'vite-plugin-checker';
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
-
+    assetsInclude: ['**/*.html'],
     plugins: [tailwindcss(), checker({ typescript: true })],
 })
