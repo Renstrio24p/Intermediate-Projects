@@ -4,5 +4,13 @@
             "source": "/(.*)",
             "destination": "/index.html"
         }
-    ]
+    ],
+    "redirects": [
+        {
+            "source": "/robots.txt",
+            "destination": "/robots.txt"
+        }
+    ],
+    "outputDirectory": "dist/client",
+    "version": 2
 }
