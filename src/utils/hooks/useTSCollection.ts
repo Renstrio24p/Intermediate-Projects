@@ -9,6 +9,6 @@ export const useTSCollection = (
   collections.forEach((collection, index) => {
     const element = elements[index];
     const param = params ? params[index] : undefined;
-    useTSComponent(collection, DOM, element, param);
+    useTSComponent(collection, DOM, element!, param);
   });
 };

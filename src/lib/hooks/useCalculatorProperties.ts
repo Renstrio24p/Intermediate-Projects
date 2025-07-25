@@ -18,7 +18,7 @@ export function useCalculatorProperties(display: HTMLInputElement | null) {
             const val = values[i];
             let bg = "bg-gray-800";
             if (val === "C") bg = "bg-red-600";
-            else if (["/", "*", "-", "+"].includes(val)) bg = "bg-yellow-600";
+            else if (["/", "*", "-", "+"].includes(val!)) bg = "bg-yellow-600";
             else if (val === "00") bg = "bg-gray-700";
             else if (val === "=") bg = "w-full col-span-3 bg-slate-800";
 
@@ -65,7 +65,7 @@ export function useCalculatorProperties(display: HTMLInputElement | null) {
 
             // Avoid duplicate operators
             const lastChar = current[current.length - 1];
-            if (isOperator(lastChar)) return;
+            if (isOperator(lastChar!)) return;
         }
 
         if (key === ".") {

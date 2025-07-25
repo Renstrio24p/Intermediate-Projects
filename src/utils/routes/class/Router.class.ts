@@ -127,7 +127,7 @@ export class TSRouter {
         if (match) {
           const params: Record<string, string> = {};
           paramNames.forEach((name, index) => {
-            params[name] = match[index + 1];
+            params[name] = match[index + 1] ?? "";
           });
 
           if (route.children) {
@@ -159,7 +159,7 @@ export class TSRouter {
     const sanitizedParams: Record<string, string> = {};
     for (const key in params) {
       if (params.hasOwnProperty(key) && this.expectedParams!.has(key)) {
-        sanitizedParams[key] = DOMPurify.sanitize(params[key]);
+        sanitizedParams[key] = DOMPurify.sanitize(params[key] ?? "");
       }
     }
     return sanitizedParams;
