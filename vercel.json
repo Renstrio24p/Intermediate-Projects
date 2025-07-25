@@ -5,8 +5,6 @@
             "destination": "/index.html"
         }
     ],
-    "buildCommand": "pnpm build",
-    "installCommand": "pnpm install",
     "builds": [
         {
             "src": "package.json",
@@ -24,5 +22,7 @@
             "src": "/.*",
             "dest": "/index.html"
         }
-    ]
+    ],
+    "buildCommand": "pnpm run build",
+    "installCommand": "pnpm install"
 }
