@@ -1,8 +1,3 @@
-import { defineConfig } from 'vite';
-import checker from 'vite-plugin-checker';
+import { defineConfig } from 'vite'
 import tailwindcss from '@tailwindcss/vite'
-
-export default defineConfig({
-
-    plugins: [tailwindcss(), checker({ typescript: true })],
-})
+export default defineConfig({ plugins: [tailwindcss(),], })
