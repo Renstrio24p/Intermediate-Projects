@@ -1,20 +1,14 @@
 {
-    "rewrites": [
-        {
-            "source": "/(.*)",
-            "destination": "/index.html"
-        }
-    ],
     "builds": [
         {
-            "src": "package.json",
-            "use": "@vercel/static-build"
+            "src": "server.ts",
+            "use": "@vercel/node"
         }
     ],
-    "buildCommand": "pnpm install && pnpm run build",
-    "outputDirectory": "dist",
-    "env": {
-        "NODE_VERSION": "23",
-        "PNPM_VERSION": "10"
-    }
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "/server.ts"
+        }
+    ]
 }
