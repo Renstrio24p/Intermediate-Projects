@@ -1,4 +1,4 @@
-import { Calculator, Home, NotFound } from "../pages";
+import { Calculator, Home, NotFound, OpenAI } from "../pages";
 import { useTSPurifier } from "../utils/hooks/useTSPurifier";
 import { TSRouter } from "../utils/routes";
 
@@ -14,6 +14,11 @@ export const Router = (DOM: HTMLElement, websiteName: string) => {
             {
                 path: "/calculate",
                 element: () => Calculator(DOM),
+            },
+
+            {
+                path: "/openai",
+                element: () => OpenAI(DOM),
             },
 
             {
