@@ -5,6 +5,8 @@
             "destination": "/index.html"
         }
     ],
+    "buildCommand": "pnpm build",
+    "installCommand": "pnpm install",
     "builds": [
         {
             "src": "package.json",
@@ -12,6 +14,15 @@
             "config": {
                 "distDir": "dist"
             }
+        }
+    ],
+    "routes": [
+        {
+            "handle": "filesystem"
+        },
+        {
+            "src": "/.*",
+            "dest": "/index.html"
         }
     ]
 }
