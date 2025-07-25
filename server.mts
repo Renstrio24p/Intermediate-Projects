@@ -1,103 +1,67 @@
-import fs from 'node:fs/promises';
-import express from 'express';
-import { Transform } from 'node:stream';
-import compression from 'compression';
-import sirv from 'sirv';
-import { createServer, ViteDevServer } from 'vite'; // Importing ViteDevServer type
+import fs from 'node:fs/promises'
+import express, { Request, Response } from 'express'
+import type { ViteDevServer } from 'vite'
 
-const isProduction = process.env.NODE_ENV === 'production';
-const port = process.env.PORT || 5179;
-const base = process.env.BASE || '/';
-const ABORT_DELAY = 10000;
+const isProduction = process.env.NODE_ENV === 'production'
+const port = Number(process.env.PORT) || 5173
+const base = process.env.BASE || '/'
 
-// IIFE to handle asynchronous code
-(async () => {
-  // Load HTML template and SSR manifest based on environment
-  const templateHtml = isProduction
-    ? await fs.readFile('./dist/client/index.html', 'utf-8')
-    : '';
-  const ssrManifest = isProduction
-    ? await fs.readFile('./dist/client/.vite/ssr-manifest.json', 'utf-8')
-    : undefined;
+// Create HTTP server
+const app = express()
 
-  const app = express();
-  let vite: ViteDevServer | undefined; // Declare vite with the appropriate type
+let templateHtml: string = ''
+let vite: ViteDevServer | undefined
 
-  // Set up Vite server in development
-  if (!isProduction) {
-    vite = await createServer({
-      server: { middlewareMode: true },
-      appType: 'custom',
-      base,
-    });
-    app.use(vite.middlewares);
-  } else {
-    // Use compression and serve static files in production
-    app.use(compression());
-    app.use(base, sirv('./dist/client', { extensions: [] }));
-  }
+if (!isProduction) {
+  const { createServer } = await import('vite')
+  vite = await createServer({
+    server: { middlewareMode: true },
+    appType: 'custom',
+    base,
+  })
+  app.use(vite.middlewares)
+} else {
+  const compression = (await import('compression')).default
+  const sirv = (await import('sirv')).default
 
-  // Handle all incoming requests
-  app.use('*', async (req, res) => {
-    try {
-      const url = req.originalUrl.replace(base, '');
-      let template;
-      let render;
+  templateHtml = await fs.readFile('./dist/client/index.html', 'utf-8')
 
-      // Load appropriate template and render function
-      if (!isProduction) {
-        template = await fs.readFile('./index.html', 'utf-8');
-        template = await vite!.transformIndexHtml(url, template); // Use non-null assertion operator
-        render = (await vite!.ssrLoadModule('/src/server.tsx')).render; // Use non-null assertion operator
-      } else {
-        template = templateHtml;
-        // Using `require` to import server.js in production
-        render = (await require('./dist/server/server.js')).render; // @ts-ignore
-      }
+  app.use(compression())
+  app.use(base, sirv('./dist/client', { extensions: [] }))
+}
 
-      let didError = false;
+app.use('*', async (req: Request, res: Response) => {
+  try {
+    const url = req.originalUrl.replace(base, '')
 
-      // Render the page
-      const { pipe, abort } = render(url, ssrManifest, {
-        onShellError() {
-          res.status(500).send('<h1>Something went wrong</h1>');
-        },
-        onShellReady() {
-          res.status(didError ? 500 : 200).set({ 'Content-Type': 'text/html' });
+    let template: string
+    let render: (url: string) => Promise<{ html: string; head?: string }>
 
-          const transformStream = new Transform({
-            transform(chunk, encoding, callback) {
-              res.write(chunk, encoding);
-              callback();
-            },
-          });
-
-          const [htmlStart, htmlEnd] = template.split(`<!--app-html-->`);
-          res.write(htmlStart);
-          transformStream.on('finish', () => {
-            res.end(htmlEnd);
-          });
-          pipe(transformStream);
-        },
-        onError(error: Error) {
-          didError = true;
-          console.error(error);
-        },
-      });
-
-      // Set a timeout to abort rendering if it takes too long
-      setTimeout(() => {
-        abort();
-      }, ABORT_DELAY);
-    } catch (e) {
-      vite?.ssrFixStacktrace((e as Error));
-      console.error(e);
-      res.status(500).end('<h1>Internal Server Error</h1>');
+    if (!isProduction && vite) {
+      template = await fs.readFile('./index.html', 'utf-8')
+      template = await vite.transformIndexHtml(url, template)
+      const mod = await vite.ssrLoadModule('/src/entry-server.ts')
+      render = mod.render
+    } else {
+      template = templateHtml
+      const mod = await import('./dist/server/entry-server.js')
+      render = mod.render as unknown as typeof render
     }
-  });
 
-  // Start the server
-  app.listen(port, () => {
-    console.log(`SSR React Hydrate Server started at http://localhost:${port}`);
-  });
-})();
+    const { html, head } = await render(url)
+
+    const finalHtml = template
+      .replace(`<!--app-head-->`, head ?? '')
+      .replace(`<!--app-html-->`, html)
+
+    res.status(200).set({ 'Content-Type': 'text/html' }).send(finalHtml)
+  } catch (e: any) {
+    if (!isProduction && vite) vite.ssrFixStacktrace(e)
+    console.error(e.stack)
+    res.status(500).end(e.stack)
+  }
+})
+
+app.listen(port, () => {
+  console.log(`Server started at http://localhost:${port}`)
+})
