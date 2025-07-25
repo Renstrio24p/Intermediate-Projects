@@ -1,8 +1,11 @@
 import { defineConfig } from 'vite';
-// import checker from 'vite-plugin-checker';
+import checker from 'vite-plugin-checker';
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
-    assetsInclude: ['**/*.html'],
-    plugins: [tailwindcss()],
-});
+    build: {
+        ssr: 'src/entry-server.ts',
+        outDir: 'dist/server'
+    },
+    plugins: [tailwindcss(), checker({ typescript: true })],
+})
