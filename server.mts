@@ -1,6 +1,5 @@
 import * as fs from 'node:fs/promises'
-import { type Request, type Response } from 'express'
-import express from 'express'
+import express, { type Request, type Response } from 'express'
 import type { ViteDevServer } from 'vite'
 
 const isProduction = process.env.NODE_ENV === 'production'
@@ -23,11 +22,10 @@ const app = express()
       })
       app.use(vite.middlewares)
     } else {
-      const compression = (await import('compression')) as any
-      const sirv = (await import('sirv')) as any
+      const compression = (await import('compression')).default
+      const sirv = (await import('sirv')).default
 
       templateHtml = await fs.readFile('./dist/client/index.html', 'utf-8')
-
       app.use(compression())
       app.use(base, sirv('dist/client', { extensions: [] }))
     }
@@ -44,9 +42,8 @@ const app = express()
           const entry = await vite.ssrLoadModule('/src/entry-server.ts')
           render = entry.render
         } else {
-          // @ts-ignore
           const entry = await import('./dist/server/entry-server.js')
-          render = entry.render as unknown as (url: string) => Promise<{ html: string; head?: string }>
+          render = entry.render as unknown as typeof render
           template = templateHtml
         }
 
@@ -63,12 +60,6 @@ const app = express()
         res.status(500).end(err.stack)
       }
     })
-
-    app.use('*', async (req, res) => {
-      const html = await fs.readFile('./dist/client/index.html', 'utf-8');
-      res.status(200).set({ 'Content-Type': 'text/html' }).end(html);
-    });
-
 
     app.listen(port, () => {
       console.log(`➜  Server running at http://localhost:${port}`)
