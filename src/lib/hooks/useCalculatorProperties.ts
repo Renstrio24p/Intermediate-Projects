@@ -60,7 +60,7 @@ export function useCalculatorProperties(display: HTMLInputElement | null) {
                 display.value = formatNumberWithCommas(current);
             } catch {
                 current = "";
-                display.value = "Error";
+                display.value = "0";
             }
             return;
         }
