@@ -1,4 +1,4 @@
-import { About, Calculator, Home, NotFound, OpenAI, AboutId } from "@/pages";
+import { About, Calculator, Home, NotFound, OpenAI, AboutId, Tiktok } from "@/pages";
 import { useTSParams, useTSPurifier } from "@/utils/hooks";
 import { TSRouter } from "@/utils/routes";
 
@@ -30,6 +30,14 @@ export const Router = (DOM: HTMLElement, websiteName: string) => {
             {
                 path: "/aboutid/:id",
                 element: () => AboutId(DOM),
+            },
+            {
+                path: "/tiktok",
+                element: () => Tiktok(DOM),
+            },
+            {
+                path: "/tiktok/:id",
+                element: () => Tiktok(DOM),
             },
             {
                 path: "*",
