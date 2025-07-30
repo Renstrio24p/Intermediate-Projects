@@ -6,6 +6,8 @@ import { useTSEventAll } from "../../utils/hooks/useTSAllElements";
 export default function Calculator(DOM: HTMLElement) {
     const display = DOM.querySelector<HTMLInputElement>("#calc-display");
 
+
+
     const { generateBtns, handleClick } = useCalculatorProperties(display);
 
     const ui = useTSElements(
