@@ -1,4 +1,4 @@
-import { useTSElements } from "../../utils/hooks"
+import { useTSElements } from "@/utils/hooks"
 
 const NotFound = (DOM: HTMLElement, websiteName: string) => {
 

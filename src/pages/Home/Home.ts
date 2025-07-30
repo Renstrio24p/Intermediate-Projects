@@ -1,6 +1,5 @@
-import { html } from "../../utils/define"
-import { useTSElements } from "../../utils/hooks"
-import { useTSEvent } from "../../utils/hooks/useTSEvent"
+import { html } from "@/utils/define"
+import { useTSElements, useTSEvent } from "@/utils/hooks"
 
 const Home = (DOM: HTMLElement, websiteName: string) => {
     document.title = websiteName

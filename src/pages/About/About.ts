@@ -1,5 +1,5 @@
-import { useTSElements, useTSMetaData } from '../../utils/hooks'
-import { html } from '../../utils/define'
+import { useTSElements, useTSMetaData } from '@/utils/hooks'
+import { html } from '@/utils/define'
 
 export default function About(DOM: HTMLElement) {
     useTSMetaData({

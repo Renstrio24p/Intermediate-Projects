@@ -1,3 +1,5 @@
+export { useTSPurifier } from './useTSPurifier';
+export { useTSEvent } from './useTSEvent';
 export { useTSExtractParams } from './useTSExtract';
 export { useTSParams } from './useTSParams';
 export { useTSEventAll } from './useTSAllElements';

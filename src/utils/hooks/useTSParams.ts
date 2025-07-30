@@ -5,12 +5,14 @@ import DOMPurify from 'dompurify';
 type ParamStore = {
     params: Record<string, string>;
     query: Record<string, string>;
-    setFromPattern: (pattern: string) => void;
+    setFromPattern: (pattern: MustURL) => void;
     getParam: (key: string) => string | undefined;
     getQuery: (key: string) => string | undefined;
 };
 
-function extractPatternParams(pattern: string, path: string): Record<string, string> {
+type MustURL = `/${string}`;
+
+function extractPatternParams(pattern: MustURL, path: string): Record<string, string> {
     const paramNames: string[] = [];
     const regexPattern = pattern.replace(/:[^/]+/g, (match) => {
         paramNames.push(match.slice(1));
@@ -30,7 +32,7 @@ function extractPatternParams(pattern: string, path: string): Record<string, str
     return result;
 }
 
-function extractQueryParams(search: string): Record<string, string> {
+function extractQueryParams(search: MustURL): Record<string, string> {
     const result: Record<string, string> = {};
     const urlSearchParams = new URLSearchParams(search);
 
@@ -44,10 +46,10 @@ function extractQueryParams(search: string): Record<string, string> {
 export const useTSParams = createStore<ParamStore>((set, get) => ({
     params: {},
     query: {},
-    setFromPattern: (pattern: string) => {
+    setFromPattern: (pattern: MustURL) => {
         const path = window.location.pathname;
         const params = extractPatternParams(pattern, path);
-        const query = extractQueryParams(window.location.search);
+        const query = extractQueryParams(window.location.search as MustURL);
         set({ params, query });
     },
     getParam: (key: string) => get().params[key],

@@ -1,5 +1,5 @@
-import { html } from '../../utils/define';
-import { useTSElements, useTSMetaData } from '../../utils/hooks'
+import { html } from '@/utils/define';
+import { useTSElements, useTSMetaData } from '@/utils/hooks'
 
 export default function OpenAI(DOM: HTMLElement) {
     useTSMetaData({

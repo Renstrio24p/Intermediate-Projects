@@ -1,6 +1,8 @@
 import { useTSParams } from './useTSParams';
 
-export function useTSExtractParams(pattern: string) {
+type MustURL = `/${string}`;
+
+export function useTSExtractParams(pattern: MustURL) {
     const store = useTSParams.getState();
 
     // Populate internal param/query store
