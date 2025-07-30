@@ -1,10 +1,8 @@
 
-import { Router } from './routes/__root.routes';
-import html from './utils/define/html';
-import { useTSComponent } from './utils/hooks/useTSComponent';
-import { useTSElements } from './utils/hooks/useTSElements'
-import { useTSMetaData } from './utils/hooks/useTSMetaData'
 import "./index.css"
+import { Router } from "./routes";
+import { html } from './utils/define';
+import { useTSComponent, useTSElements, useTSMetaData } from './utils/hooks';
 
 export default function Start(DOM: HTMLElement) {
     useTSMetaData({

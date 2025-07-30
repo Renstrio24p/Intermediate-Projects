@@ -1,4 +1,4 @@
-import html from "./utils/define/html"
+import { html } from "./utils/define"
 
 export function render() {
   const htmlContent = html`

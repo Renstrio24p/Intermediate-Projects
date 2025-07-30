@@ -1,4 +1,4 @@
-import html from "../../utils/define/html"
+import { html } from "../../utils/define"
 import { useTSElements } from "../../utils/hooks"
 import { useTSEvent } from "../../utils/hooks/useTSEvent"
 

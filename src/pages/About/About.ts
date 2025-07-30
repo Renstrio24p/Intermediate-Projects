@@ -1,19 +1,20 @@
-import { html } from '../../utils/define';
 import { useTSElements, useTSMetaData } from '../../utils/hooks'
+import { html } from '../../utils/define'
 
-export default function OpenAI(DOM: HTMLElement) {
+export default function About(DOM: HTMLElement) {
     useTSMetaData({
-        name: 'OpenAI',
+        name: 'About',
         description: '',
         author: ''
     });
 
-    useTSElements(
+    const ui = useTSElements(
         DOM,
         html`
         <div>
-            <h1 class="text-gray-500 p-4">OpenAI</h1>
+            <h1>About</h1>
         </div>
 `
     );
+    return ui
 }

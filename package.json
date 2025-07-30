@@ -17,7 +17,8 @@
     "lodash": "^4.17.21",
     "sirv": "^3.0.1",
     "tailwindcss": "^4.1.11",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "zustand": "^5.0.6"
   },
   "devDependencies": {
     "@types/compression": "^1.8.1",

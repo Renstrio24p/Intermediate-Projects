@@ -1,5 +1,5 @@
 import { useCalculatorProperties } from "../../lib/hooks";
-import html from "../../utils/define/html";
+import { html } from "../../utils/define";
 import { useTSElements, useTSEventAll } from "../../utils/hooks";
 
 export default function Calculator(DOM: HTMLElement) {

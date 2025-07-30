@@ -36,8 +36,11 @@ export function useCalculatorProperties(display: HTMLInputElement | null) {
         return buttons;
     };
 
-
     const isOperator = (char: string) => ["+", "-", "*", "/"].includes(char);
+
+    const formatDisplayWithCommas = (expr: string): string => {
+        return expr.replace(/\d+(?:\.\d+)?/g, (match) => formatNumberWithCommas(match));
+    };
 
     const handleClick = (e: MouseEvent) => {
         const target = e.currentTarget as HTMLButtonElement;
@@ -64,6 +67,9 @@ export function useCalculatorProperties(display: HTMLInputElement | null) {
 
         if (isOperator(key)) {
             if (current === "" || isOperator(current.slice(-1))) return;
+            current += key;
+            display.value = formatDisplayWithCommas(current);
+            return;
         }
 
         if (key === ".") {
@@ -73,28 +79,19 @@ export function useCalculatorProperties(display: HTMLInputElement | null) {
 
         const lastSegment = current.split(/[\+\-\*\/]/).pop() ?? "";
 
-        // Prevent starting with 0 or 00
         if ((key === "0" || key === "00") && current === "") return;
-
-        // Prevent adding 0 or 00 after an operator like '+0' then '2' → '02'
         if ((key === "0" || key === "00") && lastSegment === "0") return;
-
-        // Prevent numbers like 01, 002, 0003
         if (/^0\d/.test(lastSegment + key)) return;
 
-        // Replace default "0" when typing a digit (but not when adding operator or dot)
         if (display.value === "0" && /^[0-9]$/.test(key)) {
             current = key;
-            display.value = key;
+            display.value = formatDisplayWithCommas(current);
             return;
         }
 
         current += key;
-        display.value = current;
+        display.value = formatDisplayWithCommas(current);
     };
-
-
-
 
     return { generateBtns, handleClick };
 }
