@@ -6,7 +6,6 @@ export const Router = (DOM: HTMLElement, websiteName: string) => {
 
     useTSParams.getState()
 
-    console.log(websiteName);
     const routes = new TSRouter(
         [
             {
@@ -44,7 +43,7 @@ export const Router = (DOM: HTMLElement, websiteName: string) => {
                 element: () => NotFound(DOM, websiteName),
             },
         ],
-        [String(useTSPurifier(window.location.search)), "id", "sort"]
+        [String(useTSPurifier(window.location.search)), "id", "sort", "name", "page", "pageSize"]
     );
     return routes.navigate("");
 };

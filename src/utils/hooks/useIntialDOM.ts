@@ -1,19 +1,25 @@
-import DOMPurify from "dompurify";
+import DOMPurify from "dompurify"
 
-let previousHTML: string | null = null;
+let previousHTML: string | null = null
 
-export const useInitialDOM = (id: string, element: Function) => {
-  const targetElement = document.getElementById(id);
-  if (targetElement) {
-    const currentHTML = targetElement.innerHTML;
-    const sanitizedHTML = DOMPurify.sanitize(currentHTML);
+export const useInitialDOM = (id: string, mount: (el: HTMLElement) => void) => {
+  // SSR guard
+  if (typeof document === "undefined") return
 
-    if (previousHTML !== null && sanitizedHTML !== previousHTML) {
-      element(document.createElement("div"));
-      targetElement.innerHTML = previousHTML;
-    } else {
-      previousHTML = sanitizedHTML;
-      element(targetElement);
-    }
+  const targetElement = document.getElementById(id)
+  if (!targetElement) return
+
+  const currentHTML = targetElement.innerHTML
+  const sanitizedHTML = DOMPurify.sanitize(currentHTML)
+
+  if (previousHTML !== null && sanitizedHTML !== previousHTML) {
+    // DOM changed externally — reset and remount in a temp container
+    const fallbackEl = document.createElement("div")
+    mount(fallbackEl)
+    targetElement.innerHTML = previousHTML
+  } else {
+    // First time or same sanitized DOM — mount to target
+    previousHTML = sanitizedHTML
+    mount(targetElement)
   }
-};
+}
