@@ -1,37 +1,31 @@
+// vite.config.ts
 import { defineConfig } from 'vite'
 import tailwindcss from '@tailwindcss/vite'
 import path from 'path'
 
-export default defineConfig(({ command, mode }) => {
-    const isClientBuild = command === 'build' && mode !== 'ssr'
-
-    return {
-        plugins: [tailwindcss()],
-        resolve: {
-            alias: {
-                '@': path.resolve(__dirname, 'src'),
+export default defineConfig({
+    plugins: [tailwindcss()],
+    resolve: {
+        alias: {
+            '@': path.resolve(__dirname, 'src'),
+        },
+    },
+    build: {
+        outDir: 'dist/client',
+        rollupOptions: {
+            output: {
+                manualChunks(id) {
+                    if (id.includes('node_modules')) {
+                        const parts = id.split('node_modules/')[1].split('/')
+                        const pkg = parts[0].startsWith('@') ? `${parts[0]}/${parts[1]}` : parts[0]
+                        return `vendor-${pkg}`
+                    }
+                },
             },
         },
-        build: isClientBuild
-            ? {
-                outDir: 'dist/client',
-                rollupOptions: {
-                    output: {
-                        manualChunks(id) {
-                            if (id.includes('node_modules')) {
-                                const segments = id.split('node_modules/')[1].split('/')
-                                const pkgName = segments[0].startsWith('@')
-                                    ? `${segments[0]}/${segments[1]}`
-                                    : segments[0]
-                                return `vendor-${pkgName}`
-                            }
-                        },
-                    },
-                },
-            }
-            : {
-                ssr: true,
-                outDir: 'dist/server',
-            },
-    }
+        ssrManifest: true,
+    },
+    ssr: {
+        noExternal: true,
+    },
 })
