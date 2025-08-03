@@ -1,9 +1,8 @@
 import { html } from "./utils/define"
-import App from './App' // your app renderer
-import { useInitialDOM } from "./utils/hooks"
+import App from './App'
 
 export async function render(_url: string) {
-  const appHtml = useInitialDOM("app", App) // your own SSR logic
+  const appHtml = App
 
   return {
     html: html`
