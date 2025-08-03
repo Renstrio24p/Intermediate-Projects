@@ -1,16 +1,15 @@
 {
-    "rewrites": [
+    "version": 2,
+    "builds": [
         {
-            "source": "/(.*)",
-            "destination": "/index.html"
+            "src": "server.ts",
+            "use": "@vercel/node"
         }
     ],
-    "redirects": [
+    "routes": [
         {
-            "source": "/robots.txt",
-            "destination": "/robots.txt"
+            "src": "/(.*)",
+            "dest": "/server.ts"
         }
-    ],
-    "outputDirectory": "dist/client",
-    "version": 2
+    ]
 }
