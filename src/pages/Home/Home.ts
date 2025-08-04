@@ -23,7 +23,7 @@ const Home = (DOM: HTMLElement, websiteName: string) => {
             <p class="font-impact font-semibold">Welcome to ${websiteName}</p>
             <p>This page is currently under construction. Proceed to /calculate</p>
             <p id="count">You have clicked ${a ? a : '0'}</p>
-            <button id="click-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">Click
+            <button id="click-btn" class="bg-blue-300 mt-3 hover:bg-blue-200 text-black font-semibold py-2 px-4 rounded">Click
                 me</button>
         </div>
     `
