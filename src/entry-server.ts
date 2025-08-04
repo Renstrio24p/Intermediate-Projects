@@ -7,7 +7,7 @@ export async function render(_url: string) {
   return {
     html: html`
       <div id="app">${appHtml}</div>
-      <script type="module" src="/src/entry-client.ts"></script>
+      <script type="module" src="/src/entry-client.js"></script>
     `,
     head: `<title>My App</title>`,
   }
