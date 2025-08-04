@@ -1,25 +1,33 @@
-import { useTSElements } from "@/utils/hooks";
+import { useTSElements, useTSMetaData } from '@/utils/hooks'
+import { html } from '@/utils/define'
+import notfoundGIF from "/notfound.gif"
 
-const NotFound = (DOM: HTMLElement, websiteName: string) => {
-  document.title = `404 - Page Not Found | ${websiteName}`;
+export default function NotFound(DOM: HTMLElement, websiteName: string) {
+
+  document.title = websiteName + ' | 404'
+
+  useTSMetaData({
+    name: 'NotFound',
+    description: '',
+    author: ''
+  });
 
   const ui = useTSElements(
     DOM,
-    /*html*/ `
-      <section class="flex flex-col items-center justify-center min-h-screen text-center px-4 py-12">
-        <img 
-          src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWlnZnQ2aWQ5ZXphZmdvbW92ZHBzdzZlOXEzZjA4dXYwMWNhdzZpcCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/v1YyNw9tBHrJK/giphy.gif" 
-          alt="Tarzan plug gif" 
-          class="w-72 h-auto mb-8 rounded-xl shadow-lg" 
-        />
-        <h1 class="text-3xl font-bold mb-4">Oops! Page Not Found</h1>
-        <p class="text-gray-500 mb-6">Looks like Tarzan unplugged the page!</p>
-        <a href="/" class="inline-block px-6 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition">Go Back Home</a>
-      </section>
-    `
+    html`
+        <div class="h-screen grid place-items-center">
+          <div>
+            <div class="relative">
+              <img src="${notfoundGIF}" alt="404" />
+              <div class="text-center absolute bottom-[50px] left-0 right-0">
+                <p class="text-5xl font-bold">404</p>
+                <h1>Page Not Found</h1>
+                <p class="text-sm text-gray-600">It looks like the page you're looking for doesn't exist.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+    `,
   );
-
-  return ui;
-};
-
-export default NotFound;
+  return ui
+}
