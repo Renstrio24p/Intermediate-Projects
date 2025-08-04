@@ -4,7 +4,9 @@ import tailwindcss from '@tailwindcss/vite'
 import path from 'path'
 
 export default defineConfig({
-    plugins: [tailwindcss()],
+    plugins: [
+        tailwindcss(),
+    ],
     resolve: {
         alias: {
             '@': path.resolve(__dirname, 'src'),
@@ -12,7 +14,10 @@ export default defineConfig({
     },
     build: {
         outDir: 'dist/client',
+        manifest: true,
+        ssrManifest: true,
         rollupOptions: {
+            input: '/src/entry-client.ts',
             output: {
                 manualChunks(id) {
                     if (id.includes('node_modules')) {
@@ -23,7 +28,6 @@ export default defineConfig({
                 },
             },
         },
-        ssrManifest: true,
     },
     ssr: {
         noExternal: true,
