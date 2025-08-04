@@ -10,3 +10,4 @@ export { useAnchor } from "./useTSAnchor";
 export { useTSMetaData } from "./useTSMetaData";
 export { useTSComponent } from "./useTSComponent";
 export { useTSCollection } from "./useTSCollection";
+export { useTSSelect } from "./useTSSelect";
