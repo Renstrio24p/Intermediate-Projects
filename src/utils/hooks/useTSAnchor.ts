@@ -1,66 +1,61 @@
-import _ from 'lodash';
-const debounce = _.debounce;
+import debounce from 'lodash';
 
-const sanitizeInput = (input: string): string => {
-  const element = document.createElement("div");
-  element.innerText = input;
-  return element.innerHTML;
-};
+let sanitizeInput = (input: string): string => input; // fallback for SSR
 
-export const useAnchor = debounce((anchors: NodeListOf<HTMLAnchorElement>) => {
-  anchors.forEach(anchor => {
-    if (!anchor) return;
+if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+  sanitizeInput = (input: string): string => {
+    const element = document.createElement("div");
+    element.innerText = input;
+    return element.innerHTML;
+  };
+}
 
-    // Retrieve and store the original href and class attributes
-    const originalHref = anchor.getAttribute("href") || "#";
-    const originalClassName = anchor.getAttribute("class") || "";
+export const useAnchor = typeof window !== 'undefined'
+  ? debounce((anchors: NodeListOf<HTMLAnchorElement>) => {
+    anchors.forEach(anchor => {
+      if (!anchor) return;
 
-    // Sanitize the href and class attributes
-    const sanitizedHref = sanitizeInput(originalHref);
-    const sanitizedClassName = anchor.getAttribute("class")
-      ? sanitizeInput(anchor.getAttribute("class")!)
-      : originalClassName;
+      const originalHref = anchor.getAttribute("href") || "#";
+      const originalClassName = anchor.getAttribute("class") || "";
 
-    // Set the href and class attributes
-    anchor.setAttribute("href", sanitizedHref);
-    anchor.setAttribute("class", sanitizedClassName);
+      const sanitizedHref = sanitizeInput(originalHref);
+      const sanitizedClassName = anchor.getAttribute("class")
+        ? sanitizeInput(anchor.getAttribute("class")!)
+        : originalClassName;
 
-    // Optionally set aria-label if provided
-    if (anchor.getAttribute("aria-label")) {
-      anchor.setAttribute(
-        "aria-label",
-        sanitizeInput(anchor.getAttribute("aria-label")!)
-      );
-    }
+      anchor.setAttribute("href", sanitizedHref);
+      anchor.setAttribute("class", sanitizedClassName);
 
-    // Optionally set child elements if provided
-    const childElement = anchor.querySelector(":scope > *") as HTMLElement;
-    if (childElement) {
-      anchor.innerHTML = "";
-      anchor.appendChild(childElement);
-    }
-
-    anchor.addEventListener("click", e => {
-      const target = e.currentTarget as HTMLAnchorElement;
-      const href = target.getAttribute("href");
-
-      // If the href is an external link, let the browser handle it
-      try {
-        const url = new URL(href!, window.location.href);
-        if (url.origin !== window.location.origin) {
-          return;
-        }
-      } catch (error) {
-        console.error("Invalid URL:", error);
-        return;
+      if (anchor.getAttribute("aria-label")) {
+        anchor.setAttribute(
+          "aria-label",
+          sanitizeInput(anchor.getAttribute("aria-label")!)
+        );
       }
 
-      e.preventDefault();
+      const childElement = anchor.querySelector(":scope > *") as HTMLElement;
+      if (childElement) {
+        anchor.innerHTML = "";
+        anchor.appendChild(childElement);
+      }
 
-      // Use the history API to update the URL without refreshing the page
-      window.history.pushState({}, "", href);
-      const navEvent = new PopStateEvent("popstate");
-      window.dispatchEvent(navEvent);
+      anchor.addEventListener("click", e => {
+        const target = e.currentTarget as HTMLAnchorElement;
+        const href = target.getAttribute("href");
+
+        try {
+          const url = new URL(href!, window.location.href);
+          if (url.origin !== window.location.origin) return;
+        } catch (error) {
+          console.error("Invalid URL:", error);
+          return;
+        }
+
+        e.preventDefault();
+        window.history.pushState({}, "", href);
+        const navEvent = new PopStateEvent("popstate");
+        window.dispatchEvent(navEvent);
+      });
     });
-  });
-}, 300); // Adjust debounce delay as needed
+  })
+  : () => { }; // SSR-safe no-op

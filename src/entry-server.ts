@@ -1,8 +1,8 @@
 import { html } from "./utils/define"
-import App from './App'
+import Start from './App'
 
 export async function render(_url: string) {
-  const appHtml = App
+  const appHtml = Start()
 
   return {
     html: html`
