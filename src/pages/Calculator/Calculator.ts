@@ -1,17 +1,10 @@
-import { useCalculatorProperties } from "@/lib/hooks";
+import { useCalculate } from "@/lib/hooks";
 import { html } from "@/utils/define";
 import { useTSElements, useTSEventAll } from "@/utils/hooks";
 
 export default function Calculator(DOM: HTMLElement) {
-    const display = DOM.querySelector<HTMLInputElement>("#calc-display");
 
-    const title = "Basic Calculator Project 1";
-
-    document.title = title;
-
-    const { generateBtns, handleClick } = useCalculatorProperties(display);
-
-    const btns = generateBtns()
+    const { handleClick, btns } = useCalculate();
 
     const ui = useTSElements(
         DOM,
