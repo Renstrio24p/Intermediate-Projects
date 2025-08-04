@@ -5,6 +5,7 @@ import { html } from './utils/define';
 import { useTSComponent, useTSElements, useTSMetaData } from './utils/hooks';
 
 export default function Start(DOM: HTMLElement) {
+
     useTSMetaData({
         name: 'Start',
         description: '',
