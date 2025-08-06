@@ -1,5 +1,4 @@
-import { useTSElements, useTSMetaData } from '@/utils/hooks'
-import { html } from '@/utils/define'
+import { html, useTSElements, useTSMetaData } from '@devwareng/vanilla-ts'
 import { useTiktokApi, useTiktokSecrets } from '@/lib/hooks';
 
 export default function Tiktok(DOM: HTMLElement) {

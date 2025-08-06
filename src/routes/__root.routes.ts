@@ -1,6 +1,5 @@
 import { About, Calculator, Home, NotFound, OpenAI, AboutId, Tiktok } from "@/pages";
-import { useTSParams, useTSPurifier } from "@/utils/hooks";
-import { TSRouter } from "@/utils/routes";
+import { TSRouter, useTSParams, useTSPurifier } from "@devwareng/vanilla-ts";
 
 export const Router = (DOM: HTMLElement, websiteName: string) => {
 

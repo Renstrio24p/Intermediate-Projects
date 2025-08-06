@@ -1,5 +1,4 @@
-import { useTSElements, useTSMetaData } from '@/utils/hooks'
-import { html } from '@/utils/define'
+import { html, useTSElements, useTSMetaData } from '@devwareng/vanilla-ts'
 import notfoundGIF from "/notfound.gif"
 
 export default function NotFound(DOM: HTMLElement, websiteName: string) {

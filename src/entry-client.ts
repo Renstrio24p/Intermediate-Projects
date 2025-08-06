@@ -1,4 +1,4 @@
 import Start from "./App";
-import { useInitialDOM } from "./utils/hooks";
+import { useInitialDOM } from "@devwareng/vanilla-ts";
 
 useInitialDOM('app', Start)

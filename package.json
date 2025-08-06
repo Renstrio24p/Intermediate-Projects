@@ -12,6 +12,7 @@
     "start": "node dist/server/server.js"
   },
   "dependencies": {
+    "@devwareng/vanilla-ts": "^1.1.59",
     "@tailwindcss/vite": "^4.1.11",
     "compression": "^1.8.0",
     "debounce": "^2.2.0",

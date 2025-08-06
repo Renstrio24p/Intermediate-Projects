@@ -1,4 +1,4 @@
-import { html } from "./utils/define"
+import { html } from '@devwareng/vanilla-ts'
 import Start from './App'
 
 export async function render(_url: string) {

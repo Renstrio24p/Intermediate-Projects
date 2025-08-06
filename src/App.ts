@@ -1,8 +1,7 @@
 
 import "./index.css"
 import { Router } from "./routes";
-import { html } from './utils/define';
-import { useTSComponent, useTSElements, useTSMetaData } from './utils/hooks';
+import { html, useTSComponent, useTSElements, useTSMetaData } from '@devwareng/vanilla-ts';
 
 export default function Start(DOM?: HTMLElement) {
 

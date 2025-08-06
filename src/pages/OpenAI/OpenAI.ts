@@ -1,5 +1,4 @@
-import { html } from '@/utils/define';
-import { useTSElements, useTSMetaData } from '@/utils/hooks'
+import { html, useTSElements, useTSMetaData } from '@devwareng/vanilla-ts'
 
 export default function OpenAI(DOM: HTMLElement) {
     useTSMetaData({
