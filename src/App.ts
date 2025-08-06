@@ -7,6 +7,8 @@ export default function Start(DOM?: HTMLElement) {
 
     if (typeof window === "undefined") return;
 
+    const isDOM = DOM || document.body;
+
     useTSMetaData({
         name: 'Start',
         description: '',
@@ -16,14 +18,14 @@ export default function Start(DOM?: HTMLElement) {
     const title = 'Chatbot Assistant Open AI'
 
     const ui = useTSElements(
-        DOM || document.body,
+        isDOM,
         html`
             <main id='router' class='main'></main>
         `
     );
 
 
-    useTSComponent('router', DOM || document.body, Router, title)
+    useTSComponent('router', isDOM, Router, title)
 
     return ui
 
