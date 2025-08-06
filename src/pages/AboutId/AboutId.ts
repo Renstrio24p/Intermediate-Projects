@@ -1,5 +1,4 @@
-import { useTSElements, useTSExtractParams, useTSMetaData } from '@/utils/hooks';
-import { html } from '@/utils/define';
+import { html, useTSElements, useTSExtractParams, useTSMetaData } from "@devwareng/vanilla-ts";
 
 export default function AboutId(DOM: HTMLElement) {
 
